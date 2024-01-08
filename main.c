@@ -8,8 +8,8 @@
 #define USE_LIBC_ALLOC
 #define USE_STDIO
 #include "memAlloc.h"
-#include "intArray.h"
 #include "stringUtils.h"
+#include "intArray.h"
 
 int main(int argc, char **argv) {
     if (argc != 2) {
@@ -39,7 +39,7 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    fgets(buf, (int) size, file);
+    fread(buf, 1, size, file);
 
     String lines = NewString(buf, size);
 
@@ -48,17 +48,41 @@ int main(int argc, char **argv) {
 
     LineIndices(&lineBreaks, lines);
 
+    /*
+    enum StringError strErr = STRINGUTILS_H_OK;
+    OwnedString toString =
+            AllocString(&strErr, LIBC_ALLOC, LIBC_ALLOC_STATE, 20);
+    if (strErr != STRINGUTILS_H_OK) {
+        IntArrayClear(&lineBreaks);
+        free(buf);
+        return strErr;
+    }
+
+    StringAppendIntArray(&toString, &strErr, lineBreaks);
+    if (strErr != STRINGUTILS_H_OK) {
+        ClearString(&toString);
+        IntArrayClear(&lineBreaks);
+        free(buf);
+        return strErr;
+    }
+
+    StringWriteTo(toString.str, stdout);
+    putchar('\n');
+
+    ClearString(&toString);
+    */
+
     for (size_t i = 0; i < lineBreaks.length; i ++) {
         enum StringError error = STRINGUTILS_H_OK;
         String line = LineAt(&error, lines, lineBreaks.data[i]);
         if (error != STRINGUTILS_H_OK) {
-            printf("%zu! ", i);
+            printf("%zu ! ", i);
             String err = ErrorString(error);
             StringWriteTo(err, stdout);
             putchar('\n');
             continue;
         }
-        printf("%zu: ", i);
+        printf("%zu : ", i);
         StringWriteTo(line, stdout);
         putchar('\n');
     }

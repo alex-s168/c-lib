@@ -186,4 +186,19 @@ char *IntArrayErrStr(enum IntArrayErr error) {
     }
 }
 
+#ifdef C_STRINGUTILS_H
+OwnedString *StringAppendIntArray(OwnedString *self, enum StringError *error, IntArray arr) {
+    StringAppendString(self, error, CString("["));
+    for (size_t i = 0; i < arr.length; i ++) {
+        if (i != 0) {
+            StringAppendString(self, error, CString(", "));
+        }
+        int v = arr.data[i];
+        StringAppendInt(self, error, v);
+    }
+    StringAppendString(self, error, CString("]"));
+    return self;
+}
+#endif
+
 #endif //C_INTARRAY_H

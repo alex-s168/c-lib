@@ -8,4 +8,5 @@ add_executable(c
         intArray.h
         stringUtils.h
         memAlloc.h
+        allocators/array.h
 )
